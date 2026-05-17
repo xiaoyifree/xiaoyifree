@@ -1,11 +1,11 @@
 window.siteData = {
-  siteName: "FitPulse Lab",
-  siteTagline: "静态健身科普站",
-  heroEyebrow: "Train hard. Learn precisely.",
-  heroTitle: "把训练、恢复和营养，讲成真正能落地的知识。",
+  siteName: "向老师的FitPulse Lab",
+  siteTagline: "健身科普内容站",
+  heroEyebrow: "Strength. Engine. Recovery.",
+  heroTitle: "把训练、恢复和营养，讲成真正能改变习惯的知识。",
   heroDescription:
-    "这个静态网站适合长期沉淀健身科普内容。你只需要在仓库里补充图片、文字和 Bilibili 视频链接，就能持续更新并稳定分享给别人。",
-  footerText: "Static fitness publishing for consistent, shareable learning.",
+    "围绕力量训练、有氧运动、科学原理、运动康复和营养指南，持续整理更清晰、更可信、更容易执行的健身科普内容。",
+  footerText: "训练不是碎片化打卡，而是长期认知与习惯的建立。",
   categories: [
     {
       id: "strength",
@@ -49,8 +49,8 @@ window.siteData = {
       tags: ["卧推", "胸部发力", "动作技术"],
       featured: true,
       readTime: "4 分钟",
-      ctaLabel: "阅读要点",
-      ctaUrl: "#update",
+      ctaLabel: "阅读内容",
+      ctaUrl: "#library",
     },
     {
       id: "cardio-bili-001",
@@ -76,7 +76,7 @@ window.siteData = {
       featured: false,
       readTime: "5 分钟",
       ctaLabel: "查看内容",
-      ctaUrl: "#update",
+      ctaUrl: "#library",
     },
     {
       id: "rehab-001",
@@ -88,8 +88,8 @@ window.siteData = {
       tags: ["髋部", "久坐", "恢复"],
       featured: true,
       readTime: "4 分钟",
-      ctaLabel: "阅读思路",
-      ctaUrl: "#update",
+      ctaLabel: "阅读内容",
+      ctaUrl: "#library",
     },
     {
       id: "nutrition-bili-001",
@@ -115,7 +115,7 @@ window.siteData = {
       featured: false,
       readTime: "6 分钟",
       ctaLabel: "查看内容",
-      ctaUrl: "#update",
+      ctaUrl: "#library",
     },
   ],
 };
