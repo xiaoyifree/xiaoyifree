@@ -33,6 +33,9 @@ body {
     radial-gradient(circle at 88% 18%, rgba(26, 255, 177, 0.18), transparent 22%),
     radial-gradient(circle at 55% 78%, rgba(98, 208, 255, 0.16), transparent 24%),
     linear-gradient(180deg, #060c14 0%, #07101d 46%, #081624 100%);
+  transition: background-position 400ms ease;
+  --pointer-x: 0;
+  --pointer-y: 0;
 }
 
 body.modal-open {
@@ -82,6 +85,7 @@ input {
   border-radius: 999px;
   backdrop-filter: blur(18px);
   box-shadow: var(--shadow);
+  transition: transform 240ms ease, background-color 240ms ease, border-color 240ms ease;
 }
 
 .brand {
@@ -151,6 +155,7 @@ input {
   gap: 30px;
   align-items: center;
   padding: 72px 0 44px;
+  perspective: 1400px;
 }
 
 .eyebrow {
@@ -235,6 +240,8 @@ input {
   letter-spacing: 0.04em;
   text-transform: uppercase;
   transition: transform 180ms ease, border 180ms ease, box-shadow 180ms ease;
+  position: relative;
+  overflow: hidden;
 }
 
 .button:hover,
@@ -247,6 +254,19 @@ input {
   color: #07101d;
   background: linear-gradient(135deg, var(--volt), var(--lime));
   box-shadow: 0 18px 34px rgba(26, 255, 177, 0.25);
+}
+
+.button::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(115deg, transparent 20%, rgba(255, 255, 255, 0.45) 50%, transparent 78%);
+  transform: translateX(-130%);
+  transition: transform 460ms ease;
+}
+
+.button:hover::after {
+  transform: translateX(130%);
 }
 
 .button.secondary {
@@ -293,6 +313,7 @@ input {
 .hero-stage {
   position: relative;
   min-height: 560px;
+  transform-style: preserve-3d;
 }
 
 .stage-card {
@@ -301,6 +322,8 @@ input {
   padding: 24px;
   border-radius: var(--radius-lg);
   background: rgba(9, 18, 30, 0.72);
+  transition: transform 260ms ease, box-shadow 260ms ease;
+  animation: float-card 7.4s ease-in-out infinite;
 }
 
 .stage-card span,
@@ -327,6 +350,10 @@ input {
   background:
     linear-gradient(145deg, rgba(255, 91, 46, 0.22), rgba(9, 18, 30, 0.9) 55%),
     rgba(9, 18, 30, 0.76);
+  transform:
+    translate3d(calc(var(--pointer-x) * 18px), calc(var(--pointer-y) * 18px), 38px)
+    rotateY(calc(var(--pointer-x) * 7deg))
+    rotateX(calc(var(--pointer-y) * -5deg));
 }
 
 .stage-card--secondary {
@@ -335,6 +362,11 @@ input {
   background:
     linear-gradient(145deg, rgba(98, 208, 255, 0.18), rgba(9, 18, 30, 0.9) 58%),
     rgba(9, 18, 30, 0.76);
+  animation-delay: -3.2s;
+  transform:
+    translate3d(calc(var(--pointer-x) * -14px), calc(var(--pointer-y) * -14px), 18px)
+    rotateY(calc(var(--pointer-x) * -5deg))
+    rotateX(calc(var(--pointer-y) * 4deg));
 }
 
 .hero-grid {
@@ -343,6 +375,7 @@ input {
   border: 1px dashed rgba(255, 255, 255, 0.18);
   border-radius: 40px;
   transform: rotate(-6deg);
+  transition: transform 260ms ease, border-color 260ms ease;
 }
 
 .hero-grid::before,
@@ -356,6 +389,13 @@ input {
 
 .hero-grid::after {
   inset: 46px;
+}
+
+.hero:hover .hero-grid {
+  transform:
+    rotate(calc(-6deg + (var(--pointer-x) * 3deg)))
+    translate3d(calc(var(--pointer-x) * 12px), calc(var(--pointer-y) * 10px), 0);
+  border-color: rgba(255, 255, 255, 0.28);
 }
 
 .grid-label {
@@ -445,6 +485,17 @@ section + section {
 
 .featured-highlight {
   padding: 28px;
+  position: relative;
+  overflow: hidden;
+}
+
+.featured-highlight::after {
+  content: "";
+  position: absolute;
+  inset: auto -10% -40% 20%;
+  height: 180px;
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.16), transparent 68%);
+  pointer-events: none;
 }
 
 .featured-pill,
@@ -526,6 +577,18 @@ section + section {
     rgba(9, 18, 30, 0.76);
   box-shadow: var(--shadow);
   backdrop-filter: blur(14px);
+  overflow: hidden;
+  position: relative;
+}
+
+.collection-panel::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(120deg, transparent, rgba(255, 255, 255, 0.06), transparent);
+  transform: translateX(-120%);
+  animation: panel-scan 8s ease-in-out infinite;
+  pointer-events: none;
 }
 
 .collection-copy h3,
@@ -852,6 +915,107 @@ section + section {
   padding-left: 20px;
 }
 
+.reveal-item {
+  opacity: 0;
+  transform: translate3d(0, 28px, 0) scale(0.985);
+  transition:
+    opacity 620ms ease,
+    transform 620ms cubic-bezier(0.2, 0.7, 0.2, 1);
+  transition-delay: var(--reveal-delay, 0ms);
+}
+
+.reveal-item.is-visible,
+body.reduced-motion .reveal-item {
+  opacity: 1;
+  transform: translate3d(0, 0, 0) scale(1);
+}
+
+body.is-ready .hero-copy > *,
+body.is-ready .hero-stage > * {
+  animation: hero-rise 700ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+
+body.is-ready .hero-stage > * {
+  animation-name: hero-fade;
+}
+
+body.is-ready .hero-copy > *:nth-child(1) {
+  animation-delay: 80ms;
+}
+
+body.is-ready .hero-copy > *:nth-child(2) {
+  animation-delay: 140ms;
+}
+
+body.is-ready .hero-copy > *:nth-child(3) {
+  animation-delay: 220ms;
+}
+
+body.is-ready .hero-copy > *:nth-child(4) {
+  animation-delay: 300ms;
+}
+
+body.is-ready .hero-copy > *:nth-child(5) {
+  animation-delay: 380ms;
+}
+
+body.is-ready .hero-stage > *:nth-child(1) {
+  animation-delay: 160ms;
+}
+
+body.is-ready .hero-stage > *:nth-child(2) {
+  animation-delay: 280ms;
+}
+
+body.is-ready .hero-stage > *:nth-child(3) {
+  animation-delay: 360ms;
+}
+
+@keyframes hero-rise {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 28px, 0);
+  }
+
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@keyframes hero-fade {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes float-card {
+  0%,
+  100% {
+    box-shadow: var(--shadow);
+  }
+
+  50% {
+    box-shadow: 0 38px 96px rgba(0, 0, 0, 0.42);
+  }
+}
+
+@keyframes panel-scan {
+  0%,
+  100% {
+    transform: translateX(-120%);
+  }
+
+  45%,
+  55% {
+    transform: translateX(120%);
+  }
+}
+
 .accent-ember {
   background:
     linear-gradient(140deg, rgba(255, 91, 46, 0.24), rgba(9, 18, 30, 0.86) 54%),
@@ -968,5 +1132,21 @@ section + section {
     width: 100%;
     transform: none;
     margin-top: 18px;
+    animation: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition: none !important;
+    scroll-behavior: auto !important;
+  }
+
+  .reveal-item {
+    opacity: 1;
+    transform: none;
   }
 }

@@ -10,6 +10,8 @@ const libraryGrid = document.querySelector("#libraryGrid");
 const detailModal = document.querySelector("#detailModal");
 const detailContent = document.querySelector("#detailContent");
 const detailClose = document.querySelector("#detailClose");
+const heroSection = document.querySelector(".hero");
+const heroStage = document.querySelector(".hero-stage");
 
 let activeCategory = "all";
 let activeQuery = "";
@@ -21,6 +23,7 @@ function initSite() {
   renderFilters();
   renderLibrary();
   bindEvents();
+  setupMotion();
   openPostFromHash();
 }
 
@@ -250,6 +253,63 @@ function bindEvents() {
 
   detailClose.addEventListener("click", closePost);
   window.addEventListener("hashchange", openPostFromHash);
+}
+
+function setupMotion() {
+  if (!window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+    setupRevealObserver();
+    setupHeroMotion();
+    window.requestAnimationFrame(() => {
+      document.body.classList.add("is-ready");
+    });
+    return;
+  }
+
+  document.body.classList.add("is-ready", "reduced-motion");
+}
+
+function setupRevealObserver() {
+  const revealTargets = document.querySelectorAll(
+    ".section-heading, .category-card, .featured-highlight, .featured-mini, .collection-panel, .content-card, .editorial-grid article, .hero-metrics li"
+  );
+
+  revealTargets.forEach((element, index) => {
+    element.classList.add("reveal-item");
+    element.style.setProperty("--reveal-delay", `${Math.min(index % 6, 5) * 70}ms`);
+  });
+
+  const observer = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add("is-visible");
+          observer.unobserve(entry.target);
+        }
+      });
+    },
+    { threshold: 0.16, rootMargin: "0px 0px -48px 0px" }
+  );
+
+  revealTargets.forEach((element) => observer.observe(element));
+}
+
+function setupHeroMotion() {
+  if (!heroSection || !heroStage) {
+    return;
+  }
+
+  heroSection.addEventListener("pointermove", (event) => {
+    const bounds = heroSection.getBoundingClientRect();
+    const x = (event.clientX - bounds.left) / bounds.width - 0.5;
+    const y = (event.clientY - bounds.top) / bounds.height - 0.5;
+    heroSection.style.setProperty("--pointer-x", x.toFixed(3));
+    heroSection.style.setProperty("--pointer-y", y.toFixed(3));
+  });
+
+  heroSection.addEventListener("pointerleave", () => {
+    heroSection.style.setProperty("--pointer-x", "0");
+    heroSection.style.setProperty("--pointer-y", "0");
+  });
 }
 
 function renderPostAction(post, className) {
