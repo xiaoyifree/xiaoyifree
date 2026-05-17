@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>FitPulse Lab | 健身科普站</title>
+    <meta
+      name="description"
+      content="一个适合 GitHub Pages 免费部署的静态健身科普网站，围绕力量训练、有氧运动、科学原理、运动康复和营养指南展开。"
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700;800&family=IBM+Plex+Sans+SC:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <div class="noise"></div>
+    <header class="site-header">
+      <a class="brand" href="#top" aria-label="FitPulse Lab 首页">
+        <span class="brand-mark">FP</span>
+        <span class="brand-copy">
+          <strong id="siteName">FitPulse Lab</strong>
+          <small id="siteTagline">静态健身科普站</small>
+        </span>
+      </a>
+
+      <nav class="site-nav" aria-label="站点导航">
+        <a href="#categories">内容分类</a>
+        <a href="#featured">精选专题</a>
+        <a href="#library">内容索引</a>
+        <a href="#update">更新方式</a>
+      </nav>
+    </header>
+
+    <main id="top" class="page-shell">
+      <section class="hero">
+        <div class="hero-copy">
+          <p class="eyebrow" id="heroEyebrow">Train hard. Learn precisely.</p>
+          <h1 id="heroTitle">把训练、恢复和营养，讲成真正能落地的知识。</h1>
+          <p class="hero-text" id="heroDescription">
+            这个静态网站适合长期沉淀健身科普内容。你只需要在仓库里补充图片、文字和 Bilibili 视频链接，就能持续更新并稳定分享给别人。
+          </p>
+
+          <div class="hero-actions">
+            <a class="button primary" href="#library">开始浏览</a>
+            <a class="button secondary" href="#update">查看更新方式</a>
+          </div>
+
+          <ul class="hero-metrics" aria-label="网站统计">
+            <li>
+              <strong id="metricCategories">5</strong>
+              <span>内容分类</span>
+            </li>
+            <li>
+              <strong id="metricPosts">0</strong>
+              <span>内容条目</span>
+            </li>
+            <li>
+              <strong>Static</strong>
+              <span>GitHub Pages</span>
+            </li>
+          </ul>
+        </div>
+
+        <div class="hero-stage">
+          <article class="stage-card stage-card--primary">
+            <span>本周节奏</span>
+            <strong>Lift / Run / Repair</strong>
+            <p>训练不是堆量，而是让刺激、恢复与营养在同一节奏里合拍。</p>
+          </article>
+
+          <article class="stage-card stage-card--secondary">
+            <span>内容结构</span>
+            <strong>动作 + 原理 + 习惯</strong>
+            <p>每条内容既讲怎么做，也讲为什么有效，帮助建立长期运动判断力。</p>
+          </article>
+
+          <div class="hero-grid">
+            <span class="grid-label">Explosive knowledge</span>
+          </div>
+        </div>
+      </section>
+
+      <section class="category-section" id="categories">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">Five lanes</p>
+            <h2>五条内容主线</h2>
+          </div>
+          <p>围绕训练实践、身体适应和日常习惯，把内容拆成清晰又互相联动的知识轨道。</p>
+        </div>
+        <div class="category-grid" id="categoryGrid"></div>
+      </section>
+
+      <section class="featured-section" id="featured">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">Featured stack</p>
+            <h2>精选专题</h2>
+          </div>
+          <p>适合放你最想被看到的系列：动作拆解、训练计划、误区纠正或阶段性主题内容。</p>
+        </div>
+        <div class="featured-layout">
+          <article class="featured-highlight" id="featuredCard"></article>
+          <div class="featured-list" id="featuredList"></div>
+        </div>
+      </section>
+
+      <section class="library-section" id="library">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">Knowledge library</p>
+            <h2>内容索引</h2>
+          </div>
+          <p>支持按分类筛选和关键词搜索。Bilibili 视频会直接跳转到对应分享链接，图文内容则适合做知识卡片与长文入口。</p>
+        </div>
+
+        <div class="toolbar">
+          <div class="filter-group" id="filterGroup"></div>
+          <label class="search-box">
+            <span class="sr-only">搜索内容</span>
+            <input id="searchInput" type="search" placeholder="搜索动作、原理、恢复或营养主题" />
+          </label>
+        </div>
+
+        <div class="library-grid" id="libraryGrid"></div>
+      </section>
+
+      <section class="editorial-section">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">Editorial rhythm</p>
+            <h2>这个网站适合怎么写</h2>
+          </div>
+          <p>适合持续累积“轻知识但高质量”的内容，视觉上保持强运动感，内容上保持清晰、克制、可信。</p>
+        </div>
+        <div class="editorial-grid">
+          <article>
+            <strong>力量训练</strong>
+            <p>动作技术、计划安排、渐进超负荷与常见错误。</p>
+          </article>
+          <article>
+            <strong>有氧运动</strong>
+            <p>心肺能力、跑步节奏、能量系统和日常耐力提升。</p>
+          </article>
+          <article>
+            <strong>科学原理</strong>
+            <p>把训练中的适应机制、疲劳管理和长期进步讲清楚。</p>
+          </article>
+          <article>
+            <strong>运动康复</strong>
+            <p>围绕关节控制、动作代偿、灵活性与恢复习惯展开。</p>
+          </article>
+          <article>
+            <strong>营养指南</strong>
+            <p>热量、蛋白质、补水、进食节奏与可持续饮食思路。</p>
+          </article>
+        </div>
+      </section>
+
+      <section class="update-section" id="update">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">Update flow</p>
+            <h2>以后怎么更新</h2>
+          </div>
+          <p>这个版本不需要服务器。你主要只改一个数据文件，或者替换图片文件，然后推送到 GitHub 仓库即可。</p>
+        </div>
+
+        <div class="update-layout">
+          <article class="update-card">
+            <h3>最常见更新方式</h3>
+            <ol>
+              <li>打开 <code>site-data.js</code></li>
+              <li>新增一条内容对象，填写标题、分类、摘要和 Bilibili 链接</li>
+              <li>如果有本地图片，把图片放进仓库后填写相对路径</li>
+              <li>提交并推送到 GitHub</li>
+              <li>GitHub Pages 会自动更新网站</li>
+            </ol>
+          </article>
+
+          <article class="update-card">
+            <h3>适合放什么内容</h3>
+            <ul>
+              <li>训练动作讲解图文</li>
+              <li>Bilibili 视频外链</li>
+              <li>阶段训练建议</li>
+              <li>营养知识要点卡片</li>
+              <li>恢复和康复注意事项</li>
+            </ul>
+          </article>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <p id="footerText">Static fitness publishing for consistent, shareable learning.</p>
+    </footer>
+
+    <script src="./site-data.js"></script>
+    <script src="./script.js"></script>
+  </body>
+</html>
