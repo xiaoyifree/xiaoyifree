@@ -5,6 +5,7 @@ const featuredCard = document.querySelector("#featuredCard");
 const featuredList = document.querySelector("#featuredList");
 const filterGroup = document.querySelector("#filterGroup");
 const searchInput = document.querySelector("#searchInput");
+const collectionPanel = document.querySelector("#collectionPanel");
 const libraryGrid = document.querySelector("#libraryGrid");
 const detailModal = document.querySelector("#detailModal");
 const detailContent = document.querySelector("#detailContent");
@@ -76,7 +77,7 @@ function renderFeatured() {
     <p>${escapeHtml(lead.summary)}</p>
     <div class="meta-row">
       <span>${escapeHtml(lead.readTime)}</span>
-      <span>${lead.type === "video" ? "Bilibili 视频" : "图文内容"}</span>
+      <span>${lead.type === "video" ? "视频链接" : "图文内容"}</span>
     </div>
     ${renderPostAction(lead, "button primary")}
   `;
@@ -126,6 +127,7 @@ function renderLibrary() {
     const haystack = `${post.title} ${post.summary} ${(post.tags || []).join(" ")}`.toLowerCase();
     return inCategory && haystack.includes(query);
   });
+  renderCollectionPanel(filteredPosts);
 
   if (!filteredPosts.length) {
     libraryGrid.innerHTML = `
@@ -151,7 +153,7 @@ function renderLibrary() {
           ${visual}
           <div class="content-body">
             <div class="content-top">
-              <span class="content-type">${post.type === "video" ? "Bilibili 视频" : "图文内容"}</span>
+              <span class="content-type">${post.type === "video" ? "视频链接" : "图文内容"}</span>
               <span class="content-time">${escapeHtml(post.readTime)}</span>
             </div>
             <h3>${escapeHtml(post.title)}</h3>
@@ -163,6 +165,38 @@ function renderLibrary() {
       `;
     })
     .join("");
+}
+
+function renderCollectionPanel(filteredPosts) {
+  const category = activeCategory === "all" ? null : findCategory(activeCategory);
+  const title = category ? category.name : "全部内容";
+  const description = category
+    ? `${category.description} 这里会集中展示这个分类下的图文内容和视频链接。`
+    : "这里汇总整个站点的所有内容。你可以继续按分类筛选，或搜索具体主题。";
+  const articleCount = filteredPosts.filter((post) => post.type === "article").length;
+  const videoCount = filteredPosts.filter((post) => post.type === "video").length;
+
+  collectionPanel.innerHTML = `
+    <div class="collection-copy">
+      <span class="featured-pill">${escapeHtml(title)}</span>
+      <h3>${escapeHtml(title)}</h3>
+      <p>${escapeHtml(description)}</p>
+    </div>
+    <div class="collection-stats">
+      <div>
+        <strong>${filteredPosts.length}</strong>
+        <span>子内容</span>
+      </div>
+      <div>
+        <strong>${articleCount}</strong>
+        <span>图文</span>
+      </div>
+      <div>
+        <strong>${videoCount}</strong>
+        <span>视频链接</span>
+      </div>
+    </div>
+  `;
 }
 
 function bindEvents() {
