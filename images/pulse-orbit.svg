@@ -1,0 +1,15 @@
+<svg width="520" height="520" viewBox="0 0 520 520" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="orbitStroke" x1="82" y1="72" x2="430" y2="438" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#FFB347"/>
+      <stop offset="0.45" stop-color="#1AFFB1"/>
+      <stop offset="1" stop-color="#62D0FF"/>
+    </linearGradient>
+  </defs>
+  <circle cx="260" cy="260" r="176" stroke="url(#orbitStroke)" stroke-width="8" stroke-opacity="0.38" stroke-dasharray="18 14"/>
+  <circle cx="260" cy="260" r="116" stroke="url(#orbitStroke)" stroke-width="8" stroke-opacity="0.26" stroke-dasharray="14 12"/>
+  <path d="M88 292H154L184 234L232 330L270 188L314 292H430" stroke="url(#orbitStroke)" stroke-width="16" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="154" cy="292" r="14" fill="#1AFFB1"/>
+  <circle cx="314" cy="292" r="14" fill="#62D0FF"/>
+  <circle cx="430" cy="292" r="14" fill="#FFB347"/>
+</svg>
