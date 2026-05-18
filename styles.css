@@ -1075,6 +1075,7 @@ section + section {
 
 .detail-paragraphs p {
   margin: 0;
+  text-indent: 2em;
 }
 
 .detail-hero {

@@ -447,6 +447,15 @@ function splitArticleContent(content) {
     return [];
   }
 
+  const manualParagraphs = String(content)
+    .split(/\n\s*\n/)
+    .map((paragraph) => paragraph.trim())
+    .filter(Boolean);
+
+  if (manualParagraphs.length >= 2) {
+    return manualParagraphs.slice(0, 2);
+  }
+
   const sentences = String(content)
     .match(/[^。！？!?]+[。！？!?]?/g)
     ?.map((sentence) => sentence.trim())
@@ -456,28 +465,12 @@ function splitArticleContent(content) {
     return [String(content).trim()].filter(Boolean);
   }
 
-  const paragraphs = [];
-  let bucket = [];
-  let bucketLength = 0;
+  if (sentences.length <= 2) {
+    return [sentences.join("")];
+  }
 
-  sentences.forEach((sentence, index) => {
-    bucket.push(sentence);
-    bucketLength += sentence.length;
-
-    const shouldBreak =
-      bucketLength >= 88 ||
-      bucket.length >= 3 ||
-      (bucket.length >= 2 && sentence.length <= 22) ||
-      index === sentences.length - 1;
-
-    if (shouldBreak) {
-      paragraphs.push(bucket.join(""));
-      bucket = [];
-      bucketLength = 0;
-    }
-  });
-
-  return paragraphs;
+  const splitIndex = Math.ceil(sentences.length / 2);
+  return [sentences.slice(0, splitIndex).join(""), sentences.slice(splitIndex).join("")].filter(Boolean);
 }
 
 function escapeHtml(value) {
