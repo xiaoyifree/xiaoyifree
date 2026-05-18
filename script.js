@@ -43,10 +43,15 @@ function renderCategories() {
   categoryGrid.innerHTML = data.categories
     .map(
       (category, index) => `
-        <article class="category-card accent-${category.accent}" role="button" tabindex="0" data-filter-category="${category.id}" style="background-image:url('${escapeAttribute(category.image || "")}')">
-          <span class="category-index">0${index + 1}</span>
-          <h3>${escapeHtml(category.name)}</h3>
-          <p>${escapeHtml(category.description)}</p>
+        <article class="category-card accent-${category.accent}" role="button" tabindex="0" data-filter-category="${category.id}">
+          <div class="category-media">
+            <img src="${escapeAttribute(category.image || "")}" alt="" aria-hidden="true" />
+          </div>
+          <div class="category-copy">
+            <span class="category-index">0${index + 1}</span>
+            <h3>${escapeHtml(category.name)}</h3>
+            <p>${escapeHtml(category.description)}</p>
+          </div>
         </article>
       `
     )
@@ -270,7 +275,7 @@ function setupMotion() {
 
 function setupRevealObserver() {
   const revealTargets = document.querySelectorAll(
-    ".section-heading, .category-card, .featured-highlight, .featured-mini, .collection-panel, .content-card, .editorial-grid article, .hero-metrics li"
+    ".section-heading, .category-card, .featured-highlight, .featured-mini, .collection-panel, .content-card, .hero-metrics li"
   );
 
   revealTargets.forEach((element, index) => {
@@ -335,7 +340,11 @@ function openPost(postId) {
   }
 
   const category = findCategory(post.category);
-  const sections = (post.content || [])
+  const normalizedContent =
+    typeof post.content === "string"
+      ? [{ heading: "正文", body: post.content }]
+      : post.content || [];
+  const sections = normalizedContent
     .map(
       (section) => `
         <section class="detail-section">
