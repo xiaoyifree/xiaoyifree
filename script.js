@@ -43,7 +43,7 @@ function renderCategories() {
   categoryGrid.innerHTML = data.categories
     .map(
       (category, index) => `
-        <article class="category-card accent-${category.accent}" role="button" tabindex="0" data-filter-category="${category.id}">
+        <article class="category-card accent-${category.accent}" role="button" tabindex="0" data-filter-category="${category.id}" style="background-image:url('${escapeAttribute(category.image || "")}')">
           <span class="category-index">0${index + 1}</span>
           <h3>${escapeHtml(category.name)}</h3>
           <p>${escapeHtml(category.description)}</p>

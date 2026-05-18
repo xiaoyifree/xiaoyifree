@@ -467,7 +467,11 @@ section + section {
   min-height: 260px;
   padding: 22px;
   border-radius: var(--radius-lg);
-  background: rgba(255, 255, 255, 0.04);
+  position: relative;
+  overflow: hidden;
+  background-color: rgba(255, 255, 255, 0.04);
+  background-position: center;
+  background-size: cover;
   cursor: pointer;
   transition: transform 180ms ease, border-color 180ms ease;
 }
@@ -478,7 +482,36 @@ section + section {
   border-color: rgba(255, 255, 255, 0.22);
 }
 
+.category-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(180deg, rgba(6, 12, 20, 0.14) 0%, rgba(6, 12, 20, 0.62) 52%, rgba(6, 12, 20, 0.94) 100%);
+  pointer-events: none;
+}
+
+.category-card::after {
+  content: "";
+  position: absolute;
+  inset: auto -20% -26% 20%;
+  height: 140px;
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.22), transparent 68%);
+  opacity: 0;
+  transform: translateY(16px);
+  transition: opacity 260ms ease, transform 260ms ease;
+  pointer-events: none;
+}
+
+.category-card:hover::after,
+.category-card:focus-visible::after {
+  opacity: 1;
+  transform: translateY(0);
+}
+
 .category-index {
+  position: relative;
+  z-index: 1;
   color: rgba(255, 255, 255, 0.32);
   font-size: 2rem;
   font-weight: 700;
@@ -486,9 +519,16 @@ section + section {
 }
 
 .category-card h3 {
+  position: relative;
+  z-index: 1;
   margin-top: 22px;
   font-size: 2rem;
   text-transform: uppercase;
+}
+
+.category-card p {
+  position: relative;
+  z-index: 1;
 }
 
 .featured-layout {
