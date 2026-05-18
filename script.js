@@ -15,6 +15,8 @@ const heroStage = document.querySelector(".hero-stage");
 
 let activeCategory = "all";
 let activeQuery = "";
+const toneNames = ["flare", "current", "peak", "field", "pulse"];
+const proseNames = ["steady", "airy", "compact"];
 
 function initSite() {
   bindSiteMeta();
@@ -150,14 +152,15 @@ function renderLibrary() {
   libraryGrid.innerHTML = filteredPosts
     .map((post) => {
       const category = findCategory(post.category);
+      const presentation = getPostPresentation(post);
       const tags = (post.tags || []).map((tag) => `<span>${escapeHtml(tag)}</span>`).join("");
       const visual = post.image
-        ? `<div class="content-visual" style="background-image:url('${escapeAttribute(post.image)}')"></div>`
-        : `<div class="content-visual accent-${category.accent}"><strong>${escapeHtml(category.name)}</strong></div>`;
+        ? `<div class="content-visual accent-${category.accent} tone-${presentation.tone}" style="background-image:url('${escapeAttribute(post.image)}')"></div>`
+        : `<div class="content-visual accent-${category.accent} tone-${presentation.tone}"><strong>${escapeHtml(category.name)}</strong></div>`;
       const openAttr = post.type === "article" ? ` data-open-post="${escapeAttribute(post.id)}"` : "";
 
       return `
-        <article class="content-card${post.type === "article" ? " content-card--interactive" : ""}"${post.type === "article" ? ' role="link" tabindex="0"' : ""}${openAttr}>
+        <article class="content-card theme-${presentation.tone} prose-${presentation.prose}${post.type === "article" ? " content-card--interactive" : ""}"${post.type === "article" ? ' role="link" tabindex="0"' : ""}${openAttr}>
           ${visual}
           <div class="content-body">
             <div class="content-top">
@@ -340,16 +343,22 @@ function openPost(postId) {
   }
 
   const category = findCategory(post.category);
+  const presentation = getPostPresentation(post);
   const normalizedContent =
     typeof post.content === "string"
-      ? [{ heading: "正文", body: post.content }]
-      : post.content || [];
+      ? [{ heading: "正文", paragraphs: splitArticleContent(post.content) }]
+      : (post.content || []).map((section) => ({
+          heading: section.heading,
+          paragraphs: splitArticleContent(section.body || ""),
+        }));
   const sections = normalizedContent
     .map(
       (section) => `
         <section class="detail-section">
           <h3>${escapeHtml(section.heading)}</h3>
-          <p>${escapeHtml(section.body)}</p>
+          <div class="detail-paragraphs">
+            ${section.paragraphs.map((paragraph) => `<p>${escapeHtml(paragraph)}</p>`).join("")}
+          </div>
         </section>
       `
     )
@@ -360,16 +369,23 @@ function openPost(postId) {
   const tags = (post.tags || []).map((tag) => `<span>${escapeHtml(tag)}</span>`).join("");
 
   detailContent.innerHTML = `
-    <span class="featured-pill">${escapeHtml(category.name)}</span>
-    <div class="detail-meta">
-      <span>${escapeHtml(post.readTime)}</span>
-      <span>图文内容</span>
+    <div class="detail-hero accent-${category.accent} theme-${presentation.tone} prose-${presentation.prose}">
+      <div class="detail-hero__image"${post.image ? ` style="background-image:url('${escapeAttribute(post.image)}')"` : ""}>
+        <span class="detail-hero__wash"></span>
+      </div>
+      <div class="detail-hero__copy">
+        <span class="featured-pill">${escapeHtml(category.name)}</span>
+        <div class="detail-meta">
+          <span>${escapeHtml(post.readTime)}</span>
+          <span>图文内容</span>
+        </div>
+        <h2 id="detailTitle">${escapeHtml(post.title)}</h2>
+        <p class="detail-summary">${escapeHtml(post.summary)}</p>
+        <div class="detail-tags">${tags}</div>
+      </div>
     </div>
-    <h2 id="detailTitle">${escapeHtml(post.title)}</h2>
-    <p class="detail-summary">${escapeHtml(post.summary)}</p>
-    <div class="detail-tags">${tags}</div>
-    <div class="detail-body">
-      ${sections || `<section class="detail-section"><h3>内容摘要</h3><p>${escapeHtml(post.summary)}</p></section>`}
+    <div class="detail-body prose-${presentation.prose}">
+      ${sections || `<section class="detail-section"><h3>内容摘要</h3><div class="detail-paragraphs"><p>${escapeHtml(post.summary)}</p></div></section>`}
       ${takeaways ? `<section class="detail-section"><h3>重点提示</h3><ul>${takeaways}</ul></section>` : ""}
     </div>
   `;
@@ -414,6 +430,54 @@ function findCategory(categoryId) {
 
 function findPost(postId) {
   return data.posts.find((post) => post.id === postId);
+}
+
+function getPostPresentation(post) {
+  const postIndex = data.posts.findIndex((item) => item.id === post.id);
+  const seed = Math.max(postIndex, 0);
+
+  return {
+    tone: toneNames[seed % toneNames.length],
+    prose: proseNames[seed % proseNames.length],
+  };
+}
+
+function splitArticleContent(content) {
+  if (!content) {
+    return [];
+  }
+
+  const sentences = String(content)
+    .match(/[^。！？!?]+[。！？!?]?/g)
+    ?.map((sentence) => sentence.trim())
+    .filter(Boolean) || [];
+
+  if (!sentences.length) {
+    return [String(content).trim()].filter(Boolean);
+  }
+
+  const paragraphs = [];
+  let bucket = [];
+  let bucketLength = 0;
+
+  sentences.forEach((sentence, index) => {
+    bucket.push(sentence);
+    bucketLength += sentence.length;
+
+    const shouldBreak =
+      bucketLength >= 88 ||
+      bucket.length >= 3 ||
+      (bucket.length >= 2 && sentence.length <= 22) ||
+      index === sentences.length - 1;
+
+    if (shouldBreak) {
+      paragraphs.push(bucket.join(""));
+      bucket = [];
+      bucketLength = 0;
+    }
+  });
+
+  return paragraphs;
 }
 
 function escapeHtml(value) {
