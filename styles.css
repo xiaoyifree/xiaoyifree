@@ -182,10 +182,16 @@ input {
 }
 
 .hero h1 {
-  max-width: 12.6ch;
-  font-size: clamp(1.34rem, 2.62vw, 2.18rem);
-  line-height: 1.02;
-  text-transform: uppercase;
+  max-width: 17ch;
+  font-family: "IBM Plex Sans SC", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+  font-size: clamp(1.42rem, 2.78vw, 2.34rem);
+  font-weight: 700;
+  line-height: 1.2;
+  letter-spacing: 0.01em;
+  color: #c76434;
+  text-transform: none;
+  text-wrap: balance;
+  text-shadow: 0 12px 28px rgba(245, 146, 84, 0.16);
 }
 
 .hero-text,
@@ -1542,8 +1548,9 @@ body.is-ready .hero-stage > *:nth-child(3) {
 
   .hero h1 {
     max-width: 100%;
-    font-size: clamp(1.18rem, 6.9vw, 1.82rem);
-    line-height: 1.08;
+    font-size: clamp(1.24rem, 5.9vw, 1.72rem);
+    line-height: 1.26;
+    letter-spacing: 0.015em;
   }
 
   .hero-actions {
