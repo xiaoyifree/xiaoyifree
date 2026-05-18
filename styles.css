@@ -470,8 +470,9 @@ section + section {
   position: relative;
   overflow: hidden;
   background-color: rgba(255, 255, 255, 0.04);
-  background-position: center;
-  background-size: cover;
+  background-position: center 18px;
+  background-size: auto 72%;
+  background-repeat: no-repeat;
   cursor: pointer;
   transition: transform 180ms ease, border-color 180ms ease;
 }
@@ -789,12 +790,14 @@ section + section {
 }
 
 .content-visual {
-  min-height: 200px;
+  min-height: 220px;
   display: grid;
   place-items: center;
   padding: 18px;
-  background-position: center;
-  background-size: cover;
+  background-position: center center;
+  background-size: auto 88%;
+  background-repeat: no-repeat;
+  background-color: rgba(8, 16, 28, 0.9);
   transition: transform 340ms ease, filter 340ms ease;
 }
 
@@ -1012,7 +1015,7 @@ section + section {
 
 .content-card:hover .content-visual,
 .content-card:focus-within .content-visual {
-  transform: scale(1.08);
+  transform: scale(1.03);
   filter: saturate(1.15) brightness(1.06);
 }
 
@@ -1295,6 +1298,16 @@ body.is-ready .hero-stage > *:nth-child(3) {
     transform: none;
     margin-top: 18px;
     animation: none;
+  }
+
+  .category-card {
+    background-size: auto 64%;
+    background-position: center 14px;
+  }
+
+  .content-visual {
+    min-height: 190px;
+    background-size: auto 82%;
   }
 
   .decor-figure {
