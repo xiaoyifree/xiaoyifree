@@ -182,8 +182,9 @@ input {
 }
 
 .hero h1 {
-  max-width: 11.2ch;
-  font-size: clamp(2.2rem, 5vw, 4rem);
+  max-width: 12.6ch;
+  font-size: clamp(1.34rem, 2.62vw, 2.18rem);
+  line-height: 1.02;
   text-transform: uppercase;
 }
 
@@ -1541,7 +1542,8 @@ body.is-ready .hero-stage > *:nth-child(3) {
 
   .hero h1 {
     max-width: 100%;
-    font-size: clamp(2.2rem, 12vw, 3.7rem);
+    font-size: clamp(1.18rem, 6.9vw, 1.82rem);
+    line-height: 1.08;
   }
 
   .hero-actions {
