@@ -124,6 +124,7 @@ function renderFilters() {
   filterGroup.querySelectorAll("[data-filter]").forEach((button) => {
     button.addEventListener("click", () => {
       activeCategory = button.dataset.filter;
+      trackCategorySelection(button.dataset.filter, "filter_chip");
       renderFilters();
       renderLibrary();
     });
@@ -217,15 +218,21 @@ function bindEvents() {
   });
 
   document.addEventListener("click", (event) => {
+    const outboundTrigger = event.target.closest("[data-track-link]");
+    if (outboundTrigger) {
+      trackOutboundInteraction(outboundTrigger);
+    }
+
     const postTrigger = event.target.closest("[data-open-post]");
     if (postTrigger) {
-      openPost(postTrigger.dataset.openPost);
+      openPost(postTrigger.dataset.openPost, { track: true, source: "content_click" });
       return;
     }
 
     const categoryTrigger = event.target.closest("[data-filter-category]");
     if (categoryTrigger) {
       activeCategory = categoryTrigger.dataset.filterCategory;
+      trackCategorySelection(categoryTrigger.dataset.filterCategory, "category_card");
       renderFilters();
       renderLibrary();
       document.querySelector("#library")?.scrollIntoView({ behavior: "smooth", block: "start" });
@@ -243,12 +250,13 @@ function bindEvents() {
 
     if ((event.key === "Enter" || event.key === " ") && postTrigger) {
       event.preventDefault();
-      openPost(postTrigger.dataset.openPost);
+      openPost(postTrigger.dataset.openPost, { track: true, source: "content_keyboard" });
     }
 
     if ((event.key === "Enter" || event.key === " ") && categoryTrigger) {
       event.preventDefault();
       activeCategory = categoryTrigger.dataset.filterCategory;
+      trackCategorySelection(categoryTrigger.dataset.filterCategory, "category_card_keyboard");
       renderFilters();
       renderLibrary();
       document.querySelector("#library")?.scrollIntoView({ behavior: "smooth", block: "start" });
@@ -323,7 +331,14 @@ function setupHeroMotion() {
 function renderPostAction(post, className) {
   if (post.type === "video") {
     return `
-      <a class="${className}" href="${escapeAttribute(post.ctaUrl)}" target="_blank" rel="noreferrer">
+      <a
+        class="${className}"
+        href="${escapeAttribute(post.ctaUrl)}"
+        target="_blank"
+        rel="noreferrer"
+        data-track-link="outbound_video"
+        data-post-id="${escapeAttribute(post.id)}"
+      >
         ${escapeHtml(post.ctaLabel)}
       </a>
     `;
@@ -336,10 +351,15 @@ function renderPostAction(post, className) {
   `;
 }
 
-function openPost(postId) {
+function openPost(postId, options = {}) {
   const post = findPost(postId);
   if (!post || post.type === "video") {
     return;
+  }
+
+  const { track = false, source = "article_detail" } = options;
+  if (track) {
+    trackPostOpen(post, source);
   }
 
   const category = findCategory(post.category);
@@ -421,7 +441,7 @@ function openPostFromHash() {
   }
 
   const postId = window.location.hash.replace("#post-", "");
-  openPost(postId);
+  openPost(postId, { track: false, source: "hash" });
 }
 
 function findCategory(categoryId) {
@@ -471,6 +491,48 @@ function splitArticleContent(content) {
 
   const splitIndex = Math.ceil(sentences.length / 2);
   return [sentences.slice(0, splitIndex).join(""), sentences.slice(splitIndex).join("")].filter(Boolean);
+}
+
+function trackEvent(eventName, params = {}) {
+  if (typeof window.gtag !== "function") {
+    return;
+  }
+
+  window.gtag("event", eventName, params);
+}
+
+function trackPostOpen(post, source) {
+  const category = findCategory(post.category);
+  trackEvent("select_content", {
+    content_type: "article",
+    item_id: post.id,
+    item_name: post.title,
+    content_category: category.name,
+    interaction_source: source,
+  });
+}
+
+function trackCategorySelection(categoryId, source) {
+  const category = categoryId === "all" ? { id: "all", name: "全部内容" } : findCategory(categoryId);
+  trackEvent("select_category", {
+    category_id: category.id,
+    category_name: category.name,
+    interaction_source: source,
+  });
+}
+
+function trackOutboundInteraction(link) {
+  const post = findPost(link.dataset.postId);
+  const category = post ? findCategory(post.category) : null;
+
+  trackEvent("outbound_link_click", {
+    link_type: link.dataset.trackLink || "outbound_link",
+    link_url: link.href,
+    item_id: post?.id,
+    item_name: post?.title,
+    content_category: category?.name,
+    outbound: true,
+  });
 }
 
 function escapeHtml(value) {
